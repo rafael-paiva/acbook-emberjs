@@ -1,65 +1,65 @@
 <!DOCTYPE HTML>
 <!--
-	Read Only by HTML5 UP
-	html5up.net | @n33co
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+  Read Only by HTML5 UP
+  html5up.net | @n33co
+  Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 -->
 <html>
-	<head>
-		<title>Node.js - Lecture 3</title>
-		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-		<meta name="description" content="" />
-		<meta name="keywords" content="" />
-		<!--[if lte IE 8]><script src="css/ie/html5shiv.js"></script><![endif]-->
-		<script src="js/jquery.min.js"></script>
-		<script src="js/jquery.scrollzer.min.js"></script>
-		<script src="js/jquery.scrolly.min.js"></script>
-		<script src="js/skel.min.js"></script>
-		<script src="js/skel-layers.min.js"></script>
-		<script src="js/init.js"></script>
-		
-		<noscript>
-			<link rel="stylesheet" href="css/skel.css" />
-			<link rel="stylesheet" href="css/style.css" />
-			<link rel="stylesheet" href="css/style-xlarge.css" />
-		</noscript>
+  <head>
+    <title>Ember.js - Lecture 3</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <!--[if lte IE 8]><script src="css/ie/html5shiv.js"></script><![endif]-->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery.scrollzer.min.js"></script>
+    <script src="js/jquery.scrolly.min.js"></script>
+    <script src="js/skel.min.js"></script>
+    <script src="js/skel-layers.min.js"></script>
+    <script src="js/init.js"></script>
 
-		<style>
-			.ac-caption {
-				margin: 5px 0px 10px 0px;
-				font-size: 13px;
-  				text-align: center;
-			}
+    <noscript>
+      <link rel="stylesheet" href="css/skel.css" />
+      <link rel="stylesheet" href="css/style.css" />
+      <link rel="stylesheet" href="css/style-xlarge.css" />
+    </noscript>
 
-			#header > nav ul li a {
-				padding: 0px;
-				font-size: 0.8em;
-			}
+    <style>
+      .ac-caption {
+        margin: 5px 0px 10px 0px;
+        font-size: 13px;
+          text-align: center;
+      }
 
-			#one:before {
-				background-image: none;
-				height: 0em;
-			}
+      #header > nav ul li a {
+        padding: 0px;
+        font-size: 0.8em;
+      }
 
-			header.major h2 {
-				line-height: 1em;
-			}
-		</style>
+      #one:before {
+        background-image: none;
+        height: 0em;
+      }
 
-		<!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
-	</head>
-	<body>
-		<div id="wrapper">
+      header.major h2 {
+        line-height: 1em;
+      }
+    </style>
+
+    <!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
+  </head>
+  <body>
+    <div id="wrapper">
 
       <!-- Header -->
       <section id="header" class="skel-layers-fixed">
         <header>
-          <h1 id="logo"><a href="#">Node.js - Lecture 3</a></h1>
+          <h1 id="logo"><a href="#">Ember.js - Lecture 3</a></h1>
         </header>
         <nav id="nav">
           <ul>
-            <li><a href="#one" class="active">Middleware</a></li>
-            <li><a href="#two">Project Scaffolding</a></li>
+            <li><a href="#one" class="active">Routes</a></li>
+            <li><a href="#two">Defining your Routes</a></li>
             <li><a href="#three">Exercises</a></li>
           </ul>
           <img src="http://www.avenuecode.com/wp-content/themes/ac-site/images/white-logo.png" alt="">
@@ -68,599 +68,271 @@
         </footer>
       </section>
 
-			<!-- Main -->
+      <!-- Main -->
       <div id="main">
 
         <!-- One -->
         <section id="one">
           <div class="container">
             <header class="major">
-              <h2>Middleware</h2>
+              <h2>Routes</h2>
             </header>
 
             <header>
-              <h4>What it is</h4>
+              <h4>Introduction</h4>
             </header>
 
             <p align="justify">
-              Today I'm willing to talk about middleware. Now you guys are ready to deal with this beauty. Basically
-              Express is a series of middleware calls.
+              Imagine we are writing a web app for managing a blog. At any given time, we should be able to answer questions like <i>What post are they looking at?</i> and <i>Are they editing it?</i> In Ember.js, the answer to these questions is determined by the URL.
             </p>
 
             <p align="justify">
-              <i>
-                Middleware is a function with access to the request object, the response object, and the next
-                middleware in the application’s request-response cycle, commonly denoted by a variable named next.
-              </i>
-              <p align="right">- Express Documentation</p>
+              The URL can be set in a few ways:
             </p>
+
+            <ul>
+              <li>The user loads the app for the first time.</li>
+              <li>The user changes the URL manually, such as by clicking the back button or by editing the address bar.</li>
+              <li>The user clicks a link within the app.</li>
+              <li>Some other event in the app causes the URL to change. (for example <code>transitionTo()</code>)</li>
+            </ul>
 
             <p align="justify">
-              What it means is that a middleware can parse, validate and modify data that comes from the requester before
-              it reaches the route's callback. It can also redirect and end a request whenever it feels like it. it is very
-              important that any middleware added call the next middleware, otherwise we will leave the request hanging.
+              Regardless of how the URL becomes set, the Ember router then maps the current URL to one or more route handlers. A route handler can do several things:
             </p>
 
-            <p align="justify">
-              Now we can understand what that Body-Parser package was doing! It was actually adding a middleware to
-              be executed before our route, formatting the data and appending it to the request object. Interesting.
-            </p>
+            <ul>
+              <li>It can render a template.</li>
+              <li>It can load a model that is then available to the template.</li>
+              <li>It can redirect to a new route, such as if the user isn't allowed to visit that part of the app.</li>
+              <li>It can handle actions that involve changing a model or transitioning to a new route.</li>
+            </ul>
 
-            <span class="image fit">
-                <img src="images/middleware.png" alt="Middleware Diagram"/>
-              </span>
-            <div class="ac-caption">Middleware Diagram</div>
-
-            <header>
-              <h4>Serving Static Files</h4>
-            </header>
-
-            <p align="justify">
-              Now that we know what a middleware is (FINALLY!!) we can serve static files. This is how Node/Express
-              becomes a content server. Express makes it easy to do this.
-            </p>
-
-            <!-- HTML generated using hilite.me -->
-            <div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #66d9ef">var</span> <span style="color: #a6e22e">express</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">require</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;express&#39;</span><span style="color: #f8f8f2">);</span>
-<span style="color: #66d9ef">var</span> <span style="color: #a6e22e">app</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">express</span><span style="color: #f8f8f2">();</span>
-
-<span style="color: #a6e22e">app</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">use</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">express</span><span style="color: #f8f8f2">.</span><span style="color: #66d9ef">static</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;public&#39;</span><span style="color: #f8f8f2">));</span>
-
-<span style="color: #a6e22e">app</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">listen</span><span style="color: #f8f8f2">(</span><span style="color: #ae81ff">8080</span><span style="color: #f8f8f2">,</span> <span style="color: #66d9ef">function</span><span style="color: #f8f8f2">(){</span>
-  <span style="color: #a6e22e">console</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">log</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;Listening on port 8080...&#39;</span><span style="color: #f8f8f2">);</span>
-<span style="color: #f8f8f2">});</span>
-</pre></div>
-            <div class="ac-caption">Making a Folder Public</div>
-
-            <div style="background: #202020; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
-                <pre style="margin: 0; line-height: 125%">
-                  <span style="color: #d0d0d0">└── nodeCode</span>
-                  <span style="color: #d0d0d0">    ├── index.js</span>
-                  <span style="color: #d0d0d0">    └── public</span>
-                  <span style="color: #d0d0d0">        └── ...</span>
-                </pre>
             </div>
-            <div class="ac-caption">Folder Structure</div>
-
-            <p align="justify">
-              With this setup we can access every content inside the public folder by hitting: <b>http://localhost:8080/</b>.
-              It is possible to create a "virtual" path prefix too, since the path does not actually exists in the file system.
-            </p>
-
-            <!-- HTML generated using hilite.me -->
-            <div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #66d9ef">var</span> <span style="color: #a6e22e">express</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">require</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;express&#39;</span><span style="color: #f8f8f2">);</span>
-<span style="color: #66d9ef">var</span> <span style="color: #a6e22e">app</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">express</span><span style="color: #f8f8f2">();</span>
-
-<span style="color: #a6e22e">app</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">use</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;static&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">express</span><span style="color: #f8f8f2">.</span><span style="color: #66d9ef">static</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;public&#39;</span><span style="color: #f8f8f2">));</span>
-
-<span style="color: #a6e22e">app</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">listen</span><span style="color: #f8f8f2">(</span><span style="color: #ae81ff">8080</span><span style="color: #f8f8f2">,</span> <span style="color: #66d9ef">function</span><span style="color: #f8f8f2">(){</span>
-  <span style="color: #a6e22e">console</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">log</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;Listening on port 8080...&#39;</span><span style="color: #f8f8f2">);</span>
-<span style="color: #f8f8f2">});</span>
-</pre></div>
-            <div class="ac-caption">Adding a Path Prefix</div>
-
-            <p align="justify">
-              Doing like this we access this folder by <b>http://localhost:8080/static/</b>. So, if I have something
-              like this:
-            </p>
-
-            <div style="background: #202020; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
-                <pre style="margin: 0; line-height: 125%">
-                  <span style="color: #d0d0d0">└── nodeCode</span>
-                  <span style="color: #d0d0d0">    ├── index.js</span>
-                  <span style="color: #d0d0d0">    └── public</span>
-                  <span style="color: #d0d0d0">        ├── css</span>
-                  <span style="color: #d0d0d0">        │   └── materialDesign.css</span>
-                  <span style="color: #d0d0d0">        ├── js</span>
-                  <span style="color: #d0d0d0">        │   └── angular-v3.0.1.min.css</span>
-                  <span style="color: #d0d0d0">        └── index.html</span>
-                </pre>
-            </div>
-            <div class="ac-caption">Public Folder Structure</div>
-
-            <p align="justify">
-              We would access those files respectively:
-            </p>
-
-            <ul>
-              <li>http://localhost:8080/static/css/materialDesign.css</li>
-              <li>http://localhost:8080/static/js/angular-v3.0.1.min.css</li>
-              <li>http://localhost:8080/static/index.html</li>
-            </ul>
-
-            <p align="justify">
-              You can define multiple files:
-            </p>
-
-            <!-- HTML generated using hilite.me -->
-            <div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #66d9ef">var</span> <span style="color: #a6e22e">express</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">require</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;express&#39;</span><span style="color: #f8f8f2">);</span>
-<span style="color: #66d9ef">var</span> <span style="color: #a6e22e">app</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">express</span><span style="color: #f8f8f2">();</span>
-
-<span style="color: #a6e22e">app</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">use</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">express</span><span style="color: #f8f8f2">.</span><span style="color: #66d9ef">static</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;public&#39;</span><span style="color: #f8f8f2">));</span>
-<span style="color: #a6e22e">app</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">use</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">express</span><span style="color: #f8f8f2">.</span><span style="color: #66d9ef">static</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;files&#39;</span><span style="color: #f8f8f2">));</span>
-
-<span style="color: #a6e22e">app</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">listen</span><span style="color: #f8f8f2">(</span><span style="color: #ae81ff">8080</span><span style="color: #f8f8f2">,</span> <span style="color: #66d9ef">function</span><span style="color: #f8f8f2">(){</span>
-  <span style="color: #a6e22e">console</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">log</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;Listening on port 8080...&#39;</span><span style="color: #f8f8f2">);</span>
-<span style="color: #f8f8f2">});</span>
-</pre></div>
-            <div class="ac-caption">Multiple Files Being Served</div>
-
-            <p align="justify">
-              Our only concern about this multiple files serving is that the files would be looked up in the order the
-              static folders were set.
-            </p>
-
-            <p align="justify">
-              It is possible to configure which files and folders that we want to become public, and that is a good
-              thing.
-            </p>
-
-            <header>
-              <h4>Our First Middleware</h4>
-            </header>
-
-            <p align="justify">
-              What we know about Express's middleware:
-            </p>
-
-            <ul>
-              <li>Express is basically a bunch of them being executed;</li>
-              <li>They are executed in oder of addition (A queue);</li>
-              <li>We can access response and request objects inside its functions;</li>
-              <li>A middleware <b style="font-size: 30px;">MUST</b> call the next middleware.</li>
-            </ul>
-
-            <p align="justify">
-              To keep it simple as this lecture, we are going to build a middleware that prints the time that request
-              takes to be completed.
-            </p>
-
-            <!-- HTML generated using hilite.me -->
-            <div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #66d9ef">var</span> <span style="color: #a6e22e">express</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">require</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;express&#39;</span><span style="color: #f8f8f2">);</span>
-<span style="color: #66d9ef">var</span> <span style="color: #a6e22e">app</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">express</span><span style="color: #f8f8f2">();</span>
-
-<span style="color: #a6e22e">app</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">use</span><span style="color: #f8f8f2">(</span><span style="color: #66d9ef">function</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">request</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">response</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">next</span><span style="color: #f8f8f2">){</span>
-  <span style="color: #66d9ef">var</span> <span style="color: #a6e22e">start</span> <span style="color: #f92672">=</span> <span style="color: #66d9ef">new</span> <span style="color: #f8f8f2">Date();</span>
-  <span style="color: #66d9ef">var</span> <span style="color: #a6e22e">url</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">request</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">url</span><span style="color: #f8f8f2">;</span>
-  <span style="color: #66d9ef">var</span> <span style="color: #a6e22e">method</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">request</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">method</span><span style="color: #f8f8f2">;</span>
-
-  <span style="color: #a6e22e">response</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">on</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;finish&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #66d9ef">function</span><span style="color: #f8f8f2">(){</span>
-    <span style="color: #66d9ef">var</span> <span style="color: #a6e22e">duration</span> <span style="color: #f92672">=</span> <span style="color: #f92672">+</span><span style="color: #66d9ef">new</span> <span style="color: #f8f8f2">Date()</span> <span style="color: #f92672">-</span> <span style="color: #a6e22e">start</span><span style="color: #f8f8f2">;</span>
-    <span style="color: #66d9ef">var</span> <span style="color: #a6e22e">message</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">method</span> <span style="color: #f92672">+</span><span style="color: #e6db74">&#39; to &#39;</span><span style="color: #f92672">+</span> <span style="color: #a6e22e">url</span> <span style="color: #f92672">+</span><span style="color: #e6db74">&#39;\ntook &#39;</span><span style="color: #f92672">+</span> <span style="color: #a6e22e">duration</span> <span style="color: #f92672">+</span><span style="color: #e6db74">&#39; ms \n\n&#39;</span><span style="color: #f8f8f2">;</span>
-    <span style="color: #a6e22e">console</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">log</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">message</span><span style="color: #f8f8f2">);</span>
-  <span style="color: #f8f8f2">});</span>
-
-  <span style="color: #a6e22e">next</span><span style="color: #f8f8f2">();</span>
-<span style="color: #f8f8f2">});</span>
-
-<span style="color: #a6e22e">app</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">listen</span><span style="color: #f8f8f2">(</span><span style="color: #ae81ff">8080</span><span style="color: #f8f8f2">,</span> <span style="color: #66d9ef">function</span><span style="color: #f8f8f2">(){</span>
-  <span style="color: #a6e22e">console</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">log</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;Listening on port 8080...&#39;</span><span style="color: #f8f8f2">);</span>
-<span style="color: #f8f8f2">});</span>
-</pre></div>
-
-            <div class="ac-caption">Time Middleware</div>
-
-            <p align="justify">
-              Great! Now, for every request that reaches our server we can know how much time it took! It feels great
-              to know Middleware! You must have a tick behind your ear asking: Ok, you said that Express is middleware
-              behind middlewatre, prove it! I'm more than happy to do so.
-            </p>
-
-            <p align="justify">
-              Remember our last example at <a href="/acbook-nodejs/lecture2.html">Lecture 2: Hello World With Express</a>
-              where we define all the routes for the Dog Service? Well, here we have it:
-            </p>
-
-            <!-- HTML generated using hilite.me -->
-            <div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #66d9ef">var</span> <span style="color: #a6e22e">express</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">require</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;express&#39;</span><span style="color: #f8f8f2">);</span>
-<span style="color: #66d9ef">var</span> <span style="color: #a6e22e">Dog</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">require</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;./Dog&#39;</span><span style="color: #f8f8f2">);</span>
-<span style="color: #66d9ef">var</span> <span style="color: #a6e22e">bodyParser</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">require</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;body-parser&#39;</span><span style="color: #f8f8f2">);</span>
-<span style="color: #66d9ef">var</span> <span style="color: #a6e22e">parseUrlencoded</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">bodyParser</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">urlencoded</span><span style="color: #f8f8f2">({</span><span style="color: #a6e22e">extend</span><span style="color: #f92672">:</span> <span style="color: #66d9ef">false</span><span style="color: #f8f8f2">});</span>
-<span style="color: #66d9ef">var</span> <span style="color: #a6e22e">app</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">express</span><span style="color: #f8f8f2">();</span>
-<span style="color: #66d9ef">var</span> <span style="color: #a6e22e">dogs</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">[</span>
-  <span style="color: #66d9ef">new</span> <span style="color: #a6e22e">Dog</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;Brian&#39;</span><span style="color: #f8f8f2">),</span>
-  <span style="color: #66d9ef">new</span> <span style="color: #a6e22e">Dog</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;Tina Turner&#39;</span><span style="color: #f8f8f2">),</span>
-  <span style="color: #66d9ef">new</span> <span style="color: #a6e22e">Dog</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;Puppy 1&#39;</span><span style="color: #f8f8f2">),</span>
-  <span style="color: #66d9ef">new</span> <span style="color: #a6e22e">Dog</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;Puppy 2&#39;</span><span style="color: #f8f8f2">),</span>
-  <span style="color: #66d9ef">new</span> <span style="color: #a6e22e">Dog</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;Puppy 3&#39;</span><span style="color: #f8f8f2">)</span>
-<span style="color: #f8f8f2">];</span>
-
-<span style="color: #a6e22e">app</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">route</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;/dog&#39;</span><span style="color: #f8f8f2">)</span>
-  <span style="color: #f8f8f2">.</span><span style="color: #a6e22e">post</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">parseUrlencoded</span><span style="color: #f8f8f2">,</span> <span style="color: #66d9ef">function</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">request</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">response</span><span style="color: #f8f8f2">){</span>
-    <span style="color: #66d9ef">var</span> <span style="color: #a6e22e">data</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">request</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">body</span><span style="color: #f8f8f2">;</span>
-    <span style="color: #66d9ef">var</span> <span style="color: #a6e22e">newDog</span> <span style="color: #f92672">=</span> <span style="color: #66d9ef">new</span> <span style="color: #a6e22e">Dog</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">data</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">name</span><span style="color: #f8f8f2">);</span>
-
-    <span style="color: #a6e22e">dogs</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">push</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">newDog</span><span style="color: #f8f8f2">);</span>
-
-    <span style="color: #a6e22e">response</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">status</span><span style="color: #f8f8f2">(</span><span style="color: #ae81ff">201</span><span style="color: #f8f8f2">).</span><span style="color: #a6e22e">send</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;Dog added! Brian loved it.&#39;</span><span style="color: #f8f8f2">);</span>
-  <span style="color: #f8f8f2">})</span>
-  <span style="color: #f8f8f2">.</span><span style="color: #a6e22e">put</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">parseUrlencoded</span><span style="color: #f8f8f2">,</span> <span style="color: #66d9ef">function</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">request</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">response</span><span style="color: #f8f8f2">){</span>
-    <span style="color: #66d9ef">var</span> <span style="color: #a6e22e">dog</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">request</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">body</span><span style="color: #f8f8f2">;</span>
-    <span style="color: #66d9ef">for</span><span style="color: #f8f8f2">(</span><span style="color: #66d9ef">var</span> <span style="color: #a6e22e">x</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">dogs</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">length</span> <span style="color: #f92672">-</span> <span style="color: #ae81ff">1</span><span style="color: #f8f8f2">;</span> <span style="color: #a6e22e">x</span> <span style="color: #f92672">&gt;=</span> <span style="color: #ae81ff">0</span><span style="color: #f8f8f2">;</span> <span style="color: #a6e22e">x</span><span style="color: #f92672">--</span><span style="color: #f8f8f2">)</span> <span style="color: #f8f8f2">{</span>
-      <span style="color: #66d9ef">if</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">dogs</span><span style="color: #f8f8f2">[</span><span style="color: #a6e22e">x</span><span style="color: #f8f8f2">].</span><span style="color: #a6e22e">getName</span><span style="color: #f8f8f2">()</span> <span style="color: #f92672">===</span> <span style="color: #a6e22e">dog</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">name</span><span style="color: #f8f8f2">)</span> <span style="color: #f8f8f2">{</span>
-        <span style="color: #a6e22e">dogs</span><span style="color: #f8f8f2">[</span><span style="color: #a6e22e">x</span><span style="color: #f8f8f2">].</span><span style="color: #a6e22e">setName</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">dog</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">newName</span><span style="color: #f8f8f2">);</span>
-      <span style="color: #f8f8f2">}</span>
-    <span style="color: #f8f8f2">}</span>
-
-    <span style="color: #a6e22e">response</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">sendStatus</span><span style="color: #f8f8f2">(</span><span style="color: #ae81ff">200</span><span style="color: #f8f8f2">);</span>
-  <span style="color: #f8f8f2">});</span>
-
-<span style="color: #a6e22e">app</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">route</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;/dog/:doggyId&#39;</span><span style="color: #f8f8f2">)</span>
-  <span style="color: #f8f8f2">.</span><span style="color: #66d9ef">delete</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">parseUrlencoded</span><span style="color: #f8f8f2">,</span> <span style="color: #66d9ef">function</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">request</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">response</span><span style="color: #f8f8f2">){</span>
-    <span style="color: #66d9ef">var</span> <span style="color: #a6e22e">doggyId</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">request</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">params</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">doggyId</span><span style="color: #f8f8f2">;</span>
-
-    <span style="color: #66d9ef">var</span> <span style="color: #a6e22e">dog</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">dogs</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">splice</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">doggyId</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">1</span><span style="color: #f8f8f2">)[</span><span style="color: #ae81ff">0</span><span style="color: #f8f8f2">];</span>
-
-    <span style="color: #a6e22e">response</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">json</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">dog</span><span style="color: #f8f8f2">);</span>
-  <span style="color: #f8f8f2">});</span>
-
-<span style="color: #a6e22e">app</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">route</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;/goodDog/:doggyId&#39;</span><span style="color: #f8f8f2">)</span>
-  <span style="color: #f8f8f2">.</span><span style="color: #a6e22e">get</span><span style="color: #f8f8f2">(</span><span style="color: #66d9ef">function</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">request</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">response</span><span style="color: #f8f8f2">)</span> <span style="color: #f8f8f2">{</span>
-    <span style="color: #66d9ef">var</span> <span style="color: #a6e22e">doggyIndex</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">request</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">params</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">doggyId</span><span style="color: #f8f8f2">;</span>
-    <span style="color: #66d9ef">if</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">doggyIndex</span> <span style="color: #f92672">&amp;&amp;</span> <span style="color: #a6e22e">doggyIndex</span> <span style="color: #f92672">&lt;</span> <span style="color: #a6e22e">dogs</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">length</span><span style="color: #f8f8f2">)</span> <span style="color: #f8f8f2">{</span>
-      <span style="color: #a6e22e">response</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">send</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">dogs</span><span style="color: #f8f8f2">[</span><span style="color: #a6e22e">doggyIndex</span><span style="color: #f8f8f2">].</span><span style="color: #a6e22e">whoIsAGoodBoy</span><span style="color: #f8f8f2">());</span>
-    <span style="color: #f8f8f2">}</span>
-  <span style="color: #f8f8f2">});</span>
-
-<span style="color: #a6e22e">app</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">route</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;/wiggle/:doggyId&#39;</span><span style="color: #f8f8f2">)</span>
-  <span style="color: #f8f8f2">.</span><span style="color: #a6e22e">get</span><span style="color: #f8f8f2">(</span><span style="color: #66d9ef">function</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">request</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">response</span><span style="color: #f8f8f2">)</span> <span style="color: #f8f8f2">{</span>
-    <span style="color: #66d9ef">var</span> <span style="color: #a6e22e">doggyIndex</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">request</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">params</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">doggyId</span><span style="color: #f8f8f2">;</span>
-    <span style="color: #66d9ef">if</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">doggyIndex</span> <span style="color: #f92672">&amp;&amp;</span> <span style="color: #a6e22e">doggyIndex</span> <span style="color: #f92672">&lt;</span> <span style="color: #a6e22e">dogs</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">length</span><span style="color: #f8f8f2">)</span> <span style="color: #f8f8f2">{</span>
-      <span style="color: #a6e22e">response</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">send</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">dogs</span><span style="color: #f8f8f2">[</span><span style="color: #a6e22e">doggyIndex</span><span style="color: #f8f8f2">].</span><span style="color: #a6e22e">wiggle</span><span style="color: #f8f8f2">());</span>
-    <span style="color: #f8f8f2">}</span>
-  <span style="color: #f8f8f2">});</span>
-
-<span style="color: #a6e22e">app</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">listen</span><span style="color: #f8f8f2">(</span><span style="color: #ae81ff">8080</span><span style="color: #f8f8f2">,</span> <span style="color: #66d9ef">function</span><span style="color: #f8f8f2">(){</span>
-  <span style="color: #a6e22e">console</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">log</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;Listening on port 8080...&#39;</span><span style="color: #f8f8f2">);</span>
-<span style="color: #f8f8f2">});</span>
-</pre></div>
-            <div class="ac-caption">Full Dog Service Code</div>
-
-            <p align="justify">
-              I will make it thinner, removing this ugly routes definitions in our bootstrap code. I can read your minds,
-              you are all: "But how André?", simple my friend! <b>MIDDLEWARE</b>! First I will create a folder to hold
-              our routes. We have to pay attention that we have three endpoints:
-            </p>
-
-            <ul>
-              <li>http://localhost:8080/dog</li>
-              <li>http://localhost:8080/goodDog</li>
-              <li>http://localhost:8080/wiggle</li>
-            </ul>
-
-            <p align="justify">
-              So I will create 3 files to hold each route:
-            </p>
-
-            <ul>
-              <li>dogRoute.js</li>
-              <li>goodDogRoute.js</li>
-              <li>wiggleRoute.js</li>
-            </ul>
-
-            <p align="justify">
-              Lets go to the <i>dogRoute.js</i> file:
-            </p>
-
-            <!-- HTML generated using hilite.me -->
-            <div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #66d9ef">var</span> <span style="color: #a6e22e">bodyParser</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">require</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;body-parser&#39;</span><span style="color: #f8f8f2">);</span>
-<span style="color: #66d9ef">var</span> <span style="color: #a6e22e">parseUrlencoded</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">bodyParser</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">urlencoded</span><span style="color: #f8f8f2">({</span><span style="color: #a6e22e">extend</span><span style="color: #f92672">:</span> <span style="color: #66d9ef">false</span><span style="color: #f8f8f2">});</span>
-<span style="color: #66d9ef">var</span> <span style="color: #a6e22e">express</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">require</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;express&#39;</span><span style="color: #f8f8f2">);</span>
-<span style="color: #66d9ef">var</span> <span style="color: #a6e22e">router</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">express</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">Router</span><span style="color: #f8f8f2">();</span>
-<span style="color: #66d9ef">var</span> <span style="color: #a6e22e">dogs</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">require</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;./dogs&#39;</span><span style="color: #f8f8f2">);</span>
-<span style="color: #66d9ef">var</span> <span style="color: #a6e22e">Dog</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">require</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;./Dog&#39;</span><span style="color: #f8f8f2">);</span>
-
-<span style="color: #a6e22e">router</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">route</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;/&#39;</span><span style="color: #f8f8f2">)</span>
-  <span style="color: #f8f8f2">.</span><span style="color: #a6e22e">post</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">parseUrlencoded</span><span style="color: #f8f8f2">,</span> <span style="color: #66d9ef">function</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">request</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">response</span><span style="color: #f8f8f2">){</span>
-    <span style="color: #66d9ef">var</span> <span style="color: #a6e22e">data</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">request</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">body</span><span style="color: #f8f8f2">;</span>
-    <span style="color: #66d9ef">var</span> <span style="color: #a6e22e">newDog</span> <span style="color: #f92672">=</span> <span style="color: #66d9ef">new</span> <span style="color: #a6e22e">Dog</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">data</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">name</span><span style="color: #f8f8f2">);</span>
-
-    <span style="color: #a6e22e">dogs</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">push</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">newDog</span><span style="color: #f8f8f2">);</span>
-
-    <span style="color: #a6e22e">response</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">status</span><span style="color: #f8f8f2">(</span><span style="color: #ae81ff">201</span><span style="color: #f8f8f2">).</span><span style="color: #a6e22e">send</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;Dog added! Brian loved it.&#39;</span><span style="color: #f8f8f2">);</span>
-  <span style="color: #f8f8f2">})</span>
-  <span style="color: #f8f8f2">.</span><span style="color: #a6e22e">put</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">parseUrlencoded</span><span style="color: #f8f8f2">,</span> <span style="color: #66d9ef">function</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">request</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">response</span><span style="color: #f8f8f2">){</span>
-    <span style="color: #66d9ef">var</span> <span style="color: #a6e22e">dog</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">request</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">body</span><span style="color: #f8f8f2">;</span>
-    <span style="color: #66d9ef">for</span><span style="color: #f8f8f2">(</span><span style="color: #66d9ef">var</span> <span style="color: #a6e22e">x</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">dogs</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">length</span> <span style="color: #f92672">-</span> <span style="color: #ae81ff">1</span><span style="color: #f8f8f2">;</span> <span style="color: #a6e22e">x</span> <span style="color: #f92672">&gt;=</span> <span style="color: #ae81ff">0</span><span style="color: #f8f8f2">;</span> <span style="color: #a6e22e">x</span><span style="color: #f92672">--</span><span style="color: #f8f8f2">)</span> <span style="color: #f8f8f2">{</span>
-      <span style="color: #66d9ef">if</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">dogs</span><span style="color: #f8f8f2">[</span><span style="color: #a6e22e">x</span><span style="color: #f8f8f2">].</span><span style="color: #a6e22e">getName</span><span style="color: #f8f8f2">()</span> <span style="color: #f92672">===</span> <span style="color: #a6e22e">dog</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">name</span><span style="color: #f8f8f2">)</span> <span style="color: #f8f8f2">{</span>
-        <span style="color: #a6e22e">dogs</span><span style="color: #f8f8f2">[</span><span style="color: #a6e22e">x</span><span style="color: #f8f8f2">].</span><span style="color: #a6e22e">setName</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">dog</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">newName</span><span style="color: #f8f8f2">);</span>
-      <span style="color: #f8f8f2">}</span>
-    <span style="color: #f8f8f2">}</span>
-
-    <span style="color: #a6e22e">response</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">sendStatus</span><span style="color: #f8f8f2">(</span><span style="color: #ae81ff">200</span><span style="color: #f8f8f2">);</span>
-  <span style="color: #f8f8f2">});</span>
-
-<span style="color: #a6e22e">router</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">route</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;/:doggyId&#39;</span><span style="color: #f8f8f2">)</span>
-  <span style="color: #f8f8f2">.</span><span style="color: #66d9ef">delete</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">parseUrlencoded</span><span style="color: #f8f8f2">,</span> <span style="color: #66d9ef">function</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">request</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">response</span><span style="color: #f8f8f2">){</span>
-    <span style="color: #66d9ef">var</span> <span style="color: #a6e22e">doggyId</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">request</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">params</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">doggyId</span><span style="color: #f8f8f2">;</span>
-
-    <span style="color: #66d9ef">var</span> <span style="color: #a6e22e">dog</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">dogs</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">splice</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">doggyId</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">1</span><span style="color: #f8f8f2">)[</span><span style="color: #ae81ff">0</span><span style="color: #f8f8f2">];</span>
-
-    <span style="color: #a6e22e">response</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">json</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">dog</span><span style="color: #f8f8f2">);</span>
-  <span style="color: #f8f8f2">});</span>
-
-<span style="color: #a6e22e">module</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">exports</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">router</span><span style="color: #f8f8f2">;</span>
-</pre></div>
-
-            <div class="ac-caption">Dog Routes</div>
-
-            <p align="justify">
-              It is easy to identify that I've removed the <i>'dog'</i> word from the route. That is ok, I will get there.
-              The <i>router</i> object will give me the ability to create routes. So I'm defining inside this <i>router</i>
-              variable all the <b>relative</b> paths for each method that I want to map and then exporting it. <i>wiggle.js</i>
-              and <i>goodDog.js</i> will have the same structure.
-            </p>
-
-            <!-- HTML generated using hilite.me -->
-            <div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #66d9ef">var</span> <span style="color: #a6e22e">express</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">require</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;express&#39;</span><span style="color: #f8f8f2">);</span>
-<span style="color: #66d9ef">var</span> <span style="color: #a6e22e">router</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">express</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">Router</span><span style="color: #f8f8f2">();</span>
-<span style="color: #66d9ef">var</span> <span style="color: #a6e22e">dogs</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">require</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;./dogs&#39;</span><span style="color: #f8f8f2">);</span>
-
-<span style="color: #a6e22e">router</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">route</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;/:doggyId&#39;</span><span style="color: #f8f8f2">)</span>
-  <span style="color: #f8f8f2">.</span><span style="color: #a6e22e">get</span><span style="color: #f8f8f2">(</span><span style="color: #66d9ef">function</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">request</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">response</span><span style="color: #f8f8f2">)</span> <span style="color: #f8f8f2">{</span>
-    <span style="color: #66d9ef">var</span> <span style="color: #a6e22e">doggyIndex</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">request</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">params</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">doggyId</span><span style="color: #f8f8f2">;</span>
-    <span style="color: #66d9ef">if</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">doggyIndex</span> <span style="color: #f92672">&amp;&amp;</span> <span style="color: #a6e22e">doggyIndex</span> <span style="color: #f92672">&lt;</span> <span style="color: #a6e22e">dogs</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">length</span><span style="color: #f8f8f2">)</span> <span style="color: #f8f8f2">{</span>
-      <span style="color: #a6e22e">response</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">send</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">dogs</span><span style="color: #f8f8f2">[</span><span style="color: #a6e22e">doggyIndex</span><span style="color: #f8f8f2">].</span><span style="color: #a6e22e">whoIsAGoodBoy</span><span style="color: #f8f8f2">());</span>
-    <span style="color: #f8f8f2">}</span>
-  <span style="color: #f8f8f2">});</span>
-
-<span style="color: #a6e22e">module</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">eports</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">router</span><span style="color: #f8f8f2">;</span>
-</pre></div>
-            <div class="ac-caption">Good Dog Route</div>
-
-            <!-- HTML generated using hilite.me -->
-            <div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #66d9ef">var</span> <span style="color: #a6e22e">express</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">require</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;express&#39;</span><span style="color: #f8f8f2">);</span>
-<span style="color: #66d9ef">var</span> <span style="color: #a6e22e">router</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">express</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">Router</span><span style="color: #f8f8f2">();</span>
-<span style="color: #66d9ef">var</span> <span style="color: #a6e22e">dogs</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">require</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;./dogs&#39;</span><span style="color: #f8f8f2">);</span>
-
-<span style="color: #a6e22e">router</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">route</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;/:doggyId&#39;</span><span style="color: #f8f8f2">)</span>
-  <span style="color: #f8f8f2">.</span><span style="color: #a6e22e">get</span><span style="color: #f8f8f2">(</span><span style="color: #66d9ef">function</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">request</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">response</span><span style="color: #f8f8f2">)</span> <span style="color: #f8f8f2">{</span>
-    <span style="color: #66d9ef">var</span> <span style="color: #a6e22e">doggyIndex</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">request</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">params</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">doggyId</span><span style="color: #f8f8f2">;</span>
-    <span style="color: #66d9ef">if</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">doggyIndex</span> <span style="color: #f92672">&amp;&amp;</span> <span style="color: #a6e22e">doggyIndex</span> <span style="color: #f92672">&lt;</span> <span style="color: #a6e22e">dogs</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">length</span><span style="color: #f8f8f2">)</span> <span style="color: #f8f8f2">{</span>
-      <span style="color: #a6e22e">response</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">send</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">dogs</span><span style="color: #f8f8f2">[</span><span style="color: #a6e22e">doggyIndex</span><span style="color: #f8f8f2">].</span><span style="color: #a6e22e">wiggle</span><span style="color: #f8f8f2">());</span>
-    <span style="color: #f8f8f2">}</span>
-  <span style="color: #f8f8f2">});</span>
-
-<span style="color: #a6e22e">module</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">eports</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">router</span><span style="color: #f8f8f2">;</span>
-</pre></div>
-            <div class="ac-caption">Wiggle Route</div>
-
-            <p align="justify">
-              Nothing on my right hand....nothing on my left hand....TA-DA!
-            </p>
-
-            <!-- HTML generated using hilite.me -->
-            <div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #66d9ef">var</span> <span style="color: #a6e22e">express</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">require</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;express&#39;</span><span style="color: #f8f8f2">);</span>
-<span style="color: #66d9ef">var</span> <span style="color: #a6e22e">app</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">express</span><span style="color: #f8f8f2">();</span>
-<span style="color: #66d9ef">var</span> <span style="color: #a6e22e">dogRoute</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">require</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;./dogRoute&#39;</span><span style="color: #f8f8f2">);</span>
-<span style="color: #66d9ef">var</span> <span style="color: #a6e22e">goodDogRoute</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">require</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;./goodDogRoute&#39;</span><span style="color: #f8f8f2">);</span>
-<span style="color: #66d9ef">var</span> <span style="color: #a6e22e">wiggleRoute</span> <span style="color: #f92672">=</span> <span style="color: #a6e22e">require</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;./wiggleRoute&#39;</span><span style="color: #f8f8f2">);</span>
-
-<span style="color: #a6e22e">app</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">use</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;/dog&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">dogRoute</span><span style="color: #f8f8f2">);</span>
-<span style="color: #a6e22e">app</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">use</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;/goodDog&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">goodDogRoute</span><span style="color: #f8f8f2">);</span>
-<span style="color: #a6e22e">app</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">use</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;/wiggle&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">wiggleRoute</span><span style="color: #f8f8f2">);</span>
-
-<span style="color: #a6e22e">app</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">listen</span><span style="color: #f8f8f2">(</span><span style="color: #ae81ff">8080</span><span style="color: #f8f8f2">,</span> <span style="color: #66d9ef">function</span><span style="color: #f8f8f2">(){</span>
-  <span style="color: #a6e22e">console</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">log</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;Listening on port 8080...&#39;</span><span style="color: #f8f8f2">);</span>
-<span style="color: #f8f8f2">});</span>
-</pre></div>
-            <div class="ac-caption">Index.js Refactored</div>
-
-            <p align="justify">
-              Remember when I said about relative path in the <i>express.static</i> middleware? We can do the same thing
-              here, but now we are defining a common prefix for each route!
-            </p>
-          </div>
         </section>
 
         <!-- Two -->
         <section id="two">
           <div class="container">
-            <header class="major">
-              <h2>Project Scaffolding</h2>
+            <header>
+              <h2>Defining your Routes</h2>
             </header>
 
-            <header class="major">
-              <h4>What is Scaffolding?</h4>
+            <header>
+              <h4>Basic routes</h4>
             </header>
 
             <p align="justify">
-              We have several definitions for scaffolding, but for us scaffolding will mean:
+              The map method of your Ember application's router can be invoked to define URL mappings. When calling map, you should pass a function that will be invoked with the value <code>this</code> set to an object which you can use to create routes.
+            </p>
+
+            <!-- HTML generated using hilite.me --><div style="background: #f0f3f3; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%">Router.map(<span style="color: #006699; font-weight: bold">function</span>() {
+  <span style="color: #006699; font-weight: bold">this</span>.route(<span style="color: #CC3300">&#39;about&#39;</span>, { path<span style="color: #555555">:</span> <span style="color: #CC3300">&#39;/about&#39;</span> });
+  <span style="color: #006699; font-weight: bold">this</span>.route(<span style="color: #CC3300">&#39;favorites&#39;</span>, { path<span style="color: #555555">:</span> <span style="color: #CC3300">&#39;/favs&#39;</span> });
+});
+</pre></div>
+            <div class="ac-caption"><code>app/router.js</code></div>
+
+            <br /><br />
+            <p align="justify">
+              Now, when the user visits <code>/about</code>, Ember.js will render the <code>about</code> template. Visiting <code>/favs</code> will render the <code>favorites</code> template.
             </p>
 
             <p align="justify">
-              <i>
-                Is the first folder structure defined for a project. It can follow any kind of standard or pattern
-                that best fits the project's needs.
-              </i>
-              <p align="right">- Almeida, André</p>
+              You can leave off the path if it is the same as the route name. In this case, the following is equivalent to the above example:
+            </p>
+
+              <!-- HTML generated using hilite.me --><div style="background: #f0f3f3; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%">Router.map(<span style="color: #006699; font-weight: bold">function</span>() {
+  <span style="color: #006699; font-weight: bold">this</span>.route(<span style="color: #CC3300">&#39;about&#39;</span>);
+  <span style="color: #006699; font-weight: bold">this</span>.route(<span style="color: #CC3300">&#39;favorites&#39;</span>, { path<span style="color: #555555">:</span> <span style="color: #CC3300">&#39;/favs&#39;</span> });
+});
+</pre></div>
+            <div class="ac-caption"><code>app/router.js</code></div>
+
+            <br /><br />
+            <p align="justify">
+              Inside your templates, you can use <code>{{link-to}}</code> to navigate between routes, using the name that you provided to the <code>route</code> method.
+            </p>
+
+            <!-- HTML generated using hilite.me --><div style="background: #f0f3f3; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #009999">{{#</span><span style="color: #330099">link</span><span style="color: #555555">-</span><span style="color: #330099">to</span> <span style="color: #CC3300">&quot;index&quot;</span><span style="color: #009999">}}<span style="color: #330099; font-weight: bold">&lt;img</span> <span style="color: #330099">class=</span><span style="color: #CC3300">&quot;logo&quot;</span><span style="color: #330099; font-weight: bold">&gt;</span><span style="color: #009999">{{/</span><span style="color: #330099">link</span><span style="color: #555555">-</span><span style="color: #330099">to</span><span style="color: #009999">}}
+
+<span style="color: #330099; font-weight: bold">&lt;nav&gt;</span>
+  <span style="color: #009999">{{#</span><span style="color: #330099">link</span><span style="color: #555555">-</span><span style="color: #330099">to</span> <span style="color: #CC3300">&quot;about&quot;</span><span style="color: #009999">}}About<span style="color: #009999">{{/</span><span style="color: #330099">link</span><span style="color: #555555">-</span><span style="color: #330099">to</span><span style="color: #009999">}}
+  <span style="color: #009999">{{#</span><span style="color: #330099">link</span><span style="color: #555555">-</span><span style="color: #330099">to</span> <span style="color: #CC3300">&quot;favorites&quot;</span><span style="color: #009999">}}Favorites<span style="color: #009999">{{/</span><span style="color: #330099">link</span><span style="color: #555555">-</span><span style="color: #330099">to</span><span style="color: #009999">}}
+<span style="color: #330099; font-weight: bold">&lt;/nav&gt;</span>
+</pre></div>
+
+            <br /><br />
+            <p align="justify">
+              The <code>{{link-to}}</code> helper will also add an active class to the link that points to the currently active route.
+            </p>
+
+            <header>
+              <h4>Nested routes</h4>
+            </header>
+
+            <p align="justify">
+              Often you'll want to have a template that displays inside another template. For example, in a blogging application, instead of going from a list of blog posts to creating a new post, you might want to have the post creation page display next to the list.
             </p>
 
             <p align="justify">
-              As Node.js is a runtime environment, there is no standard structure defined for it. The same goes for Express,
-              there isn't anything pre-defined, that means that we can go nuts! Ok, not like that, but we are free to
-              do whatever our project need.
+              In these cases, you can use nested routes to display one template inside of another.
+              <br />(<small><i>Why not components?</i></small>)
             </p>
 
             <p align="justify">
-              We've seen in <a href="/acbook-nodejs/lecture1.html#three">Lecture 1: Code Import, Using Require</a> that
-              Node give us the power to import any code into any file using <b>require()</b>. Which means that we can
-              scatter our code all over the place and them glue them together using imports.
+              You can define nested routes by passing a callback to <code>this.route</code>:
+            </p>
+
+            <!-- HTML generated using hilite.me --><div style="background: #f0f3f3; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%">Router.map(<span style="color: #006699; font-weight: bold">function</span>() {
+  <span style="color: #006699; font-weight: bold">this</span>.route(<span style="color: #CC3300">&#39;posts&#39;</span>, <span style="color: #006699; font-weight: bold">function</span>() {
+    <span style="color: #006699; font-weight: bold">this</span>.route(<span style="color: #CC3300">&#39;new&#39;</span>);
+  });
+});
+</pre></div>
+            <div class="ac-caption"><code>app/router.js</code></div>
+
+            <br /><br />
+            <p align="justify">
+              And then add the <code>{{outlet}}</code> helper to your template where you want the nested template to display:
+            </p>
+
+            <!-- HTML generated using hilite.me --><div style="background: #f0f3f3; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #330099; font-weight: bold">&lt;h1&gt;</span>Posts<span style="color: #330099; font-weight: bold">&lt;/h1&gt;</span>
+<span style="color: #0099FF; font-style: italic">&lt;!-- Display posts and other content --&gt;</span>
+<span style="color: #009999">{{</span><span style="color: #330099">outlet</span><span style="color: #009999">}}
+</pre></div>
+            <div class="ac-caption"><code>app/router.js</code></div>
+
+            <br /><br />
+            <p align="justify">
+              This router creates a route for <code>/posts</code> and for <code>/posts/new</code>. When a user visits <code>/posts</code>, they'll simply see the <code>posts.hbs</code> template.
             </p>
 
             <p align="justify">
-              We've just saw that it is possible to make any folder visible to the internet using the middleware
-              <b>express.static()</b>. With this we can even decouple our frontend from the backend. We still have some
-              awesome tools, like <b><a href="http://gruntjs.com/">Grunt</a></b>, that allow us to modularize even more
-              our sweet code. We even got NPM to manage our packages! So I can say that we are in a comfortable situation.
+              A nested route's names includes the names of its ancestors. If you want to transition to a route (either via <code>transitionTo</code> or <code>{{#link-to}}</code>), make sure to use the full route name (<code>posts.new</code>, not <code>new</code>).
+            </p>
+
+            <header class="major">
+              <h4>The application route</h4>
+            </header>
+
+            <p align="justify">
+              The <code>application</code> is entered when your app first boots up. Just like any other route, it will load an <code>application</code> template by default. You should put your header, footer, and any other decorative content here. All other routes will render their templates into the <code>application.hbs</code> templates's <code>{{outlet}}</code>.
             </p>
 
             <p align="justify">
-              When we are facing this kind of problem, I mean, defining a folder structure, we should be asking some
-              questions:
+              This route is part of every application, so you don't need to specify it in your <code>app/router.js</code>.
             </p>
 
-            <ul>
-              <li>What kind of application I'm building?</li>
-              <li>Do we have a standard folder structure for that already?</li>
-              <li>How can I organize my code so I can minimize the code conflicts in merges?</li>
-              <li>How can I organize my code so I can work with few open folders in my sidebar?</li>
-              <li>Which kind of name should I give my folders so I can make it easy to find what I want?</li>
-            </ul>
+            <header class="major">
+              <h4>The application route</h4>
+            </header>
 
             <p align="justify">
-              For some of us, thinking about how we can organize our files is not that hard, because we came from a
-              developer background which gives us the knowledge of how things can be connected and some folder
-              patterns that we used in the past.
+              At every level of nesting (including the top level), Ember.js automatically provides a route for the <code>/</code> path named <code>index</code>.
             </p>
 
             <p align="justify">
-              To prove you that I am not lying: I bet that more than half of you that are reading this knows what MVC is.
-              Got you, didn't I? MVC is one of the most popular folder structure in a <b>server project</b>. The reason
-              is that MVC have well defined rules and concepts about how a server should work and behave, so most of the
-              developers find it warming working in a workspace that they already know. Just because we are using a
-              bad-ass-awesome-kick-ass-new technology does not mean that we have to throw away all the cool stuff that
-              the community already gave to us.
+              For example, if you write a simple router like this:
+            </p>
+
+            <!-- HTML generated using hilite.me --><div style="background: #f0f3f3; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%">Router.map(<span style="color: #006699; font-weight: bold">function</span>()<span style="color: #009999">{</span>
+  <span style="color: #330099">this</span><span style="color: #555555">.</span><span style="color: #330099">route</span><span style="color: #555555">(</span><span style="color: #CC3300">&#39;favorites&#39;</span><span style="color: #555555">);</span>
+<span style="color: #009999">}</span>);
+</pre></div>
+            <div class="ac-caption"><code>app/router.js</code></div>
+
+            <p align="justify">
+              It is the equivalent of:
+            </p>
+
+            <!-- HTML generated using hilite.me --><div style="background: #f0f3f3; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%">Router.map(<span style="color: #006699; font-weight: bold">function</span>()<span style="color: #009999">{</span>
+  <span style="color: #330099">this</span><span style="color: #555555">.</span><span style="color: #330099">route</span><span style="color: #555555">(</span><span style="color: #CC3300">&#39;index&#39;</span><span style="color: #555555">,</span> <span style="color: #555555">{</span> <span style="color: #330099">path</span><span style="color: #555555">:</span> <span style="color: #CC3300">&#39;/&#39;</span> <span style="color: #009999">}</span>);
+  <span style="color: #006699; font-weight: bold">this</span>.route(<span style="color: #CC3300">&#39;favorites&#39;</span>);
+});
+</pre></div>
+            <div class="ac-caption"><code>app/router.js</code></div>
+
+            <br /><br />
+            <p align="justify">
+              The <code>index</code> template will be rendered into the <code>{{outlet}}</code> in the <code>application</code> template. If the user navigates to <code>/favorites</code>, Ember.js will replace the <code>index</code> template with the <code>favorites</code> template.
             </p>
 
             <p align="justify">
-              Bottom line? If you are building a MVC application you will create an MVC structure.
+              A nested router like this:
             </p>
 
-            <div style="background: #202020; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
-                <pre style="margin: 0; line-height: 125%">
-                  <span style="color: #d0d0d0">└── nodeCode</span>
-                  <span style="color: #d0d0d0">    ├── Controllers</span>
-                  <span style="color: #d0d0d0">    │   ├── userController.js</span>
-                  <span style="color: #d0d0d0">    │   ├── friendsController.js</span>
-                  <span style="color: #d0d0d0">    │   └── postController.js</span>
-                  <span style="color: #d0d0d0">    ├── Model</span>
-                  <span style="color: #d0d0d0">    │   ├── friendsDAO.js</span>
-                  <span style="color: #d0d0d0">    │   ├── postDAO.js</span>
-                  <span style="color: #d0d0d0">    │   └── userDAO.js</span>
-                  <span style="color: #d0d0d0">    ├── View</span>
-                  <span style="color: #d0d0d0">    │   ├── css/</span>
-                  <span style="color: #d0d0d0">    │   ├── js/</span>
-                  <span style="color: #d0d0d0">    │   ├── friendList.html</span>
-                  <span style="color: #d0d0d0">    │   ├── index.html</span>
-                  <span style="color: #d0d0d0">    │   └── login.html</span>
-                  <span style="color: #d0d0d0">    ├── Routes</span>
-                  <span style="color: #d0d0d0">    │   ├── friends.route.js</span>
-                  <span style="color: #d0d0d0">    │   ├── index.route.js</span>
-                  <span style="color: #d0d0d0">    │   └── login.route.js</span>
-                  <span style="color: #d0d0d0">    └── server.js</span>
-                </pre>
-            </div>
-            <div class="ac-caption">MVC Folder Structure</div>
+            <!-- HTML generated using hilite.me --><div style="background: #f0f3f3; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%">Router.map(<span style="color: #006699; font-weight: bold">function</span>() <span style="color: #009999">{</span>
+  <span style="color: #330099">this</span><span style="color: #555555">.</span><span style="color: #330099">route</span><span style="color: #555555">(</span><span style="color: #CC3300">&#39;posts&#39;</span><span style="color: #555555">,</span> <span style="color: #330099">function</span><span style="color: #555555">()</span> <span style="color: #555555">{</span>
+    <span style="color: #330099">this</span><span style="color: #555555">.</span><span style="color: #330099">route</span><span style="color: #555555">(</span><span style="color: #CC3300">&#39;favorites&#39;</span><span style="color: #555555">);</span>
+  <span style="color: #009999">}</span>);
+});
+</pre></div>
+            <div class="ac-caption"><code>app/router.js</code></div>
 
             <p align="justify">
-              Or you can build a structure from your head, thinking about coupling concerns
+              Is the equivalent of:
             </p>
 
-            <div style="background: #202020; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
-                <pre style="margin: 0; line-height: 125%">
-                  <span style="color: #d0d0d0">└── nodeCode</span>
-                  <span style="color: #d0d0d0">    ├── Auth</span>
-                  <span style="color: #d0d0d0">    │   └── authorization.js</span>
-                  <span style="color: #d0d0d0">    ├── Persistent</span>
-                  <span style="color: #d0d0d0">    │   ├── friendsDAO.js</span>
-                  <span style="color: #d0d0d0">    │   ├── postDAO.js</span>
-                  <span style="color: #d0d0d0">    │   └── userDAO.js</span>
-                  <span style="color: #d0d0d0">    ├── Routes</span>
-                  <span style="color: #d0d0d0">    │   ├── friendship</span>
-                  <span style="color: #d0d0d0">    │   │   ├── friendshipController.js</span>
-                  <span style="color: #d0d0d0">    │   │   └── friendshipRouting.js</span>
-                  <span style="color: #d0d0d0">    │   ├── login</span>
-                  <span style="color: #d0d0d0">    │   │   ├── loginController.js</span>
-                  <span style="color: #d0d0d0">    │   │   └── loginRouting.js</span>
-                  <span style="color: #d0d0d0">    │   └── users</span>
-                  <span style="color: #d0d0d0">    │       ├── userController.js</span>
-                  <span style="color: #d0d0d0">    │       └── userRouting.js</span>
-                  <span style="color: #d0d0d0">    ├── Schema</span>
-                  <span style="color: #d0d0d0">    │   ├── friendship.schema.js</span>
-                  <span style="color: #d0d0d0">    │   └── user.schema.js</span>
-                  <span style="color: #d0d0d0">    ├── config.js</span>
-                  <span style="color: #d0d0d0">    └── index.js</span>
-                </pre>
-            </div>
-            <div class="ac-caption">Concerns Folder Structure</div>
+            <!-- HTML generated using hilite.me --><div style="background: #f0f3f3; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%">Router.map(<span style="color: #006699; font-weight: bold">function</span>()<span style="color: #009999">{</span>
+  <span style="color: #330099">this</span><span style="color: #555555">.</span><span style="color: #330099">route</span><span style="color: #555555">(</span><span style="color: #CC3300">&#39;index&#39;</span><span style="color: #555555">,</span> <span style="color: #555555">{</span> <span style="color: #330099">path</span><span style="color: #555555">:</span> <span style="color: #CC3300">&#39;/&#39;</span> <span style="color: #009999">}</span>);
+  <span style="color: #006699; font-weight: bold">this</span>.route(<span style="color: #CC3300">&#39;posts&#39;</span>, <span style="color: #006699; font-weight: bold">function</span>() <span style="color: #009999">{</span>
+    <span style="color: #330099">this</span><span style="color: #555555">.</span><span style="color: #330099">route</span><span style="color: #555555">(</span><span style="color: #CC3300">&#39;index&#39;</span><span style="color: #555555">,</span> <span style="color: #555555">{</span> <span style="color: #330099">path</span><span style="color: #555555">:</span> <span style="color: #CC3300">&#39;/&#39;</span> <span style="color: #009999">}</span>);
+    <span style="color: #006699; font-weight: bold">this</span>.route(<span style="color: #CC3300">&#39;favorites&#39;</span>);
+  });
+});
+</pre></div>
+            <div class="ac-caption"><code>app/router.js</code></div>
 
+            <br /><br />
             <p align="justify">
-              There is no right way to do it. There is the best way to solve your needs/problems. You always have to
-              think if it is easy to understand where to find your code and if this is really organizing everything.
+              If the user navigates to <code>/posts</code>, the current route will be <code>posts.index</code>, and the <code>posts/index</code> template will be rendered into the <code>{{outlet}}</code> in the <code>posts</code> template.
             </p>
 
             <p align="justify">
-              But we are talking about server application. We can build desktop applications too. Lets take a look into
-              Popcorn Time folder structure:
+              If the user then navigates to <code>/posts/favorites</code>, Ember.js will replace the <code>{{outlet}}</code> in the <code>posts</code> template with the <code>posts/favorites</code> template.
             </p>
 
-            <div style="background: #202020; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
-                <pre style="margin: 0; line-height: 125%">
-                  <span style="color: #d0d0d0">└── src/app</span>
-                  <span style="color: #d0d0d0">    ├── css</span>
-                  <span style="color: #d0d0d0">    │   ├── animation.css</span>
-                  <span style="color: #d0d0d0">    │   └── font-awesome.min.css</span>
-                  <span style="color: #d0d0d0">    ├── fonts</span>
-                  <span style="color: #d0d0d0">    │   ├── OpenSansBold.svg</span>
-                  <span style="color: #d0d0d0">    │   ├── OpdenSans-Blod.woff</span>
-                  <span style="color: #d0d0d0">    │   └── ...</span>
-                  <span style="color: #d0d0d0">    ├── images</span>
-                  <span style="color: #d0d0d0">    │   └── ...</span>
-                  <span style="color: #d0d0d0">    ├── lib</span>
-                  <span style="color: #d0d0d0">    │   ├── cache.js</span>
-                  <span style="color: #d0d0d0">    │   └── ...</span>
-                  <span style="color: #d0d0d0">    ├── styl</span>
-                  <span style="color: #d0d0d0">    │   ├── Official_-_Black_&_Yellow_theme.styl</span>
-                  <span style="color: #d0d0d0">    │   └── ..</span>
-                  <span style="color: #d0d0d0">    ├── templates</span>
-                  <span style="color: #d0d0d0">    │   ├── about.tpl</span>
-                  <span style="color: #d0d0d0">    │   └── ...</span>
-                  <span style="color: #d0d0d0">    ├── vendor</span>
-                  <span style="color: #d0d0d0">    │   ├── videojshooks.js</span>
-                  <span style="color: #d0d0d0">    │   └── videojsplugins.js</span>
-                  <span style="color: #d0d0d0">    ├── .jshintrc</span>
-                  <span style="color: #d0d0d0">    ├── app.js</span>
-                  <span style="color: #d0d0d0">    ├── bootstrap.js</span>
-                  <span style="color: #d0d0d0">    ├── common.js</span>
-                  <span style="color: #d0d0d0">    ├── database.js</span>
-                  <span style="color: #d0d0d0">    ├── httpapi.js</span>
-                  <span style="color: #d0d0d0">    ├── index.html</span>
-                  <span style="color: #d0d0d0">    ├── language.js</span>
-                  <span style="color: #d0d0d0">    ├── settings.js</span>
-                  <span style="color: #d0d0d0">    ├── updater.js</span>
-                  <span style="color: #d0d0d0">    └── vpn.js</span>
-                </pre>
-            </div>
-            <div class="ac-caption">Popcorn Time Folder Structure</div>
+            <header class="major">
+              <h4>Dynamic segments</h4>
+            </header>
 
             <p align="justify">
-              Lets use our well know patterns! Lets couple concerns! Lets decouple layers! Lets make it beautiful!
-              Lets make it readable!
+              <i>As we already know...</i> one of the responsibilities of a route is to load a model.
             </p>
 
-            </div>
-          </section>
+            <p align="justify">
+              For example, if we have the route <code>this.route('posts');</code>, our route might load all of the blog posts for the app.
+            </p>
+
+            <p align="justify">
+              Because <code>/posts</code> represents a fixed model, we don't need any additional information to know what to retrieve. However, if we want a route to represent a single post, we would not want to have to hardcode every possible post into the router.
+            </p>
+
+            <p align="justify">
+              Enter <i>dynamic segments</i>.
+            </p>
+
+            <p align="justify">
+              A dynamic segment is a portion of a URL that starts with a <code>:</code> and is followed by an identifier.
+            </p>
+
+            <p>
+              <!-- HTML generated using hilite.me --><div style="background: #f0f3f3; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%">Router.map(<span style="color: #006699; font-weight: bold">function</span>() <span style="color: #009999">{</span>
+  <span style="color: #330099">this</span><span style="color: #555555">.</span><span style="color: #330099">route</span><span style="color: #555555">(</span><span style="color: #CC3300">&#39;posts&#39;</span><span style="color: #555555">);</span>
+  <span style="color: #330099">this</span><span style="color: #555555">.</span><span style="color: #330099">route</span><span style="color: #555555">(</span><span style="color: #CC3300">&#39;post&#39;</span><span style="color: #555555">,</span> <span style="color: #555555">{</span> <span style="color: #330099">path</span><span style="color: #555555">:</span> <span style="color: #CC3300">&#39;/post/:post_id&#39;</span> <span style="color: #009999">}</span>);
+});
+</pre></div>
+            <div class="ac-caption"><code>app/router.js</code></div>
+            </p>
+
+            <p align="justify">
+              If the user navigates to <code>/post/5</code>, the route will then have the <code>post_id</code> of <code>5</code> to use to load the correct post.
+            </p>
+
+            <p><i>Remember we covered Dynamic Models?</i></p>
+          </div>
+        </section>
 
         <!-- Three -->
         <section id="three">
@@ -669,19 +341,12 @@
               <h2>Exercises</h2>
             </header>
 
-            <p align="justify">
-              I've created another branch named <b>Lecture 3</b> in the <a href="https://github.com/andrebot/Lecture2-NodeExpressAC">same repository</a>
-              that we used in <a href="/acbook-nodejs/lecture2.html#four">Lecture 2: Exercises</a>. Please move all the
-              code that you did in the master branch and move it to this new branch.
-            </p>
-
             <header>
               <h1>Exercise 1:</h1>
             </header>
 
             <p align="justify">
-              Using the server created at <a href="/acbook-nodejs/lecture2.html#four">Lesson 2: Exercises</a> install
-              the package <i>body-parser</i> and add two middleware to parse url encoded data and json data.
+              Create a <code>index.hbs</code> inside your <code>templates</code> folder. <small><i>Easy! ;)</i></small>
             </p>
 
             <header>
@@ -689,7 +354,7 @@
             </header>
 
             <p align="justify">
-              Using the same code created at Exercise 1 make the folder <i>public</i> available to be reached by <a>http://localhost:3000</a>.
+              Refactor your <code>application.hbs</code> to only have the <code>{{outlet}}</code> property and the decoration that will be visible to every other route/template. Move everything else to our newly created <code>index.hbs</code>.
             </p>
 
             <header>
@@ -697,8 +362,7 @@
             </header>
 
             <p align="justify">
-              Using the same code created at Exercise 2 create a config file that will hold the server configurations:
-              host, port, appName.
+              Create a <code>route</code> called <code>friends</code>. When you're done, add a <code>model</code> hook that will fetch all your friends (similar to what we did in <code>application</code> route) and display every friend's name in the <code>template</code>.
             </p>
 
             <header>
@@ -706,9 +370,7 @@
             </header>
 
             <p align="justify">
-              <b>CHALLENGE:</b> Using the same code created at Exercise 3 create a middleware which will be triggered before
-              every request that searches for a cookie in the request with the appName defined at the config file create
-              in the last exercise and print its contents on the console.
+              Create a link on <code>index</code> template to the new <code>friends</code> route.
             </p>
 
             <header>
@@ -716,8 +378,19 @@
             </header>
 
             <p align="justify">
-              Using the same code created at Exercise 4 decouple your routes definitions from the index.js into another file
-              and import it back to index.js and use it as a middleware to define your routes again.
+              Create a nested route, inside <code>friends</code>, called <code>friend</code>. This nested route must be dynamic and should receive an <code>friend_id</code> attribute. When your <i>dynamic route</i> is created, add a <code>model</code> hook that will fetch a specific user with the given <code>friend_id</code>.
+            </p>
+
+            <p align="justify">
+              <small><i>Tip: to create a nested route run: <code>ember g route parent/child</code></i></small>
+            </p>
+
+            <header>
+              <h1>Exercise 5:</h1>
+            </header>
+
+            <p align="justify">
+              Update <code>friend</code> template to display your friend's name and email.
             </p>
 
             <header>
@@ -725,17 +398,7 @@
             </header>
 
             <p align="justify">
-              Using the same code created at Exercise 4 move the cookie middleware into its own folder. Do the same with
-              the file created at Exercise 5 to hold the routes. And again with <i>userDAO</i> and <i>user.schema.js</i>,
-              put them into separate folders. Name those files the way you find it is best.
-            </p>
-
-            <header>
-              <h1>Exercise 7:</h1>
-            </header>
-
-            <p align="justify">
-              Are you IDLE? Ask me for more challenges.
+              On your <code>friends</code> template, when displaying each friend's name, create a link for each name that will link to the nested route <code>friend</code> and pass as parameter the user id that will be used to fetch that user information.
             </p>
           </div>
         </section>
@@ -752,5 +415,5 @@
         </div>
       </section>
     </div>
-	</body>
+  </body>
 </html>
