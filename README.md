@@ -1,36 +1,38 @@
-# AC Book: Node.js
+# AC Book: Ember.js
 
-This course consists of an Introduction to Node.Js and Express.
+*A framework for creating ambitious web applications.*
 
-We cover the main features of both, and also develop a small Social Network project.
+This course consists of an Introduction to Ember.js.
 
-Requirements: Basic JS Knowledge
+We'll cover the basics of Ember.js and give an overview of it's main features. The course goal is to build a small Social Network website.
+
+Requirements: Basic JavaScript Knowledge.
 
 ### Lecture 1
 
-* Introduction to Node.js
-* What is Node.Js ? What is not ?
-* Blocking and Non-Blocking Code
-* JS Recap (Event Loop and Callbacks)
-* Hello World
-* NPM (Package.json ) 
-* HTTP - WebServer
+* Introduction
+* Core Concepts
+* Getting Started
+* Exercises
 
 ### Lecture 2
 
-* Introduction to Express
-* URL Recap (HTTP and URL Structure)
-* Lifting a server
-* Express Request and Responses
-* Routing
+* Learning more about Models
+* Ember Data
+* Defining models with Ember Data
+* Finding Records with Ember Data
+* Exercises
 
 ### Lecture 3
 
-* What Is Middleware
-* Project Scaffolding
+* Routes
+* Defining your Routes
+* Exercises
 
 ### Lecture 4
 
-* Grunt
-* Testing (Mocha, Should, Supertest and Blanket)
-* Cookie Authentication
+* The Object Model
+* Computed Properties
+* Templates
+* Link-to
+* Exercises
